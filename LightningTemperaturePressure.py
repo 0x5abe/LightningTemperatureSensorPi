@@ -122,10 +122,8 @@ GPIO.setup(IRQ_PIN, GPIO.IN)
 GPIO.add_event_detect(IRQ_PIN, GPIO.RISING, callback = callback_handle)
 print("start lightning detect.")
 
-s = 0
 while True:
   connection.process_data_events()
-  print("sent heartbeat seconds: " + str(s))
   temp = '{0:0.2f} *C'.format(temperaturePressureSensor.read_temperature())
   presshPa = temperaturePressureSensor.read_pressure() * 0.01
   press = '{0:0.2f} hPa'.format(presshPa)
@@ -142,6 +140,5 @@ while True:
   }
   temperaturePressureChannel.basic_publish(exchange='', routing_key=TEMP_PRESS_QUEUE, body=json.dumps(message))
   time.sleep(1.0)
-  s = s + 1
 
 
