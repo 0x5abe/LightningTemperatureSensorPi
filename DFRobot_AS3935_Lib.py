@@ -172,7 +172,7 @@ class DFRobot_AS3935:
     elif irqSelect == 2:
       self.sing_reg_write(0x08, 0xE0, 0x40) #set only SRCO bit
     elif irqSelect == 3:
-      self.sing_reg_write(0x08, 0xE0, 0x80) #set only SRCO bit
+      self.sing_reg_write(0x08, 0xE0, 0x80) #set only LCO bit
     else:
       self.sing_reg_write(0x08, 0xE0, 0x00) #clear IRQ pin display bits
 

@@ -50,8 +50,8 @@ lightningSensor.set_tuning_caps(AS3935_CAPACITANCE)
 # This will dispaly the antenna's resonance frequency/16 on IRQ pin (The resonance frequency will be divided by 16 on this pin)
 # Tuning AS3935_CAPACITANCE to make the frequency within 500/16 kHz plus 3.5% to 500/16 kHz minus 3.5%
 #
-# lightningSensor.setLco_fdiv(0)
-# lightningSensor.setIrq_output_source(3)
+# lightningSensor.set_lco_fdiv(3)
+# lightningSensor.set_irq_output_source(3)
 
 #Set the noise level,use a default value greater than 7
 lightningSensor.set_noise_floor_lv1(2)
