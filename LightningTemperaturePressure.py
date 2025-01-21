@@ -15,8 +15,8 @@ AS3935_I2C_ADDR2 = 0X02
 AS3935_I2C_ADDR3 = 0X03
 
 #Antenna tuning capcitance (must be integer multiple of 8, 8 - 120 pf)
-AS3935_CAPACITANCE = 96
-IRQ_PIN = 37
+AS3935_CAPACITANCE = 0
+IRQ_PIN = 38
 
 GPIO.setmode(GPIO.BOARD)
 
@@ -70,7 +70,7 @@ lightningSensor.set_spike_rejection(2)
 
 LIGHTNING_QUEUE = 'lightning_data'
 TEMP_PRESS_QUEUE = 'temperature_pressure_data'
-HOST = '192.168.1.3'
+HOST = '192.168.1.201'
 
 #setup rabbitmq message queue
 connection = pika.BlockingConnection(pika.ConnectionParameters(host=HOST, heartbeat=300, blocked_connection_timeout=600))
@@ -80,6 +80,8 @@ lightningChannel.queue_declare(queue=LIGHTNING_QUEUE)
 global temperaturePressureChannel
 temperaturePressureChannel = connection.channel()
 temperaturePressureChannel.queue_declare(queue=TEMP_PRESS_QUEUE)
+
+messages = []
 
 def callback_handle(channel):
   global lightningSensor
@@ -98,21 +100,21 @@ def callback_handle(channel):
       "intensity": lightning_energy_val,
       "datetime": datetime.now().strftime("%Y-%m-%dT%H:%M:%S.%f")
     }
-    lightningChannel.basic_publish(exchange='', routing_key=LIGHTNING_QUEUE, body=json.dumps(message))
+    messages.append(json.dumps(message))
   elif intSrc == 2:
     print('Disturber discovered! - Time: {}'.format(datetime.now().strftime("%Y-%m-%dT%H:%M:%S.%f")))
     message = {
       "message": 'Disturber discovered!',
       "datetime": datetime.now().strftime("%Y-%m-%dT%H:%M:%S.%f")
     }
-    lightningChannel.basic_publish(exchange='', routing_key=LIGHTNING_QUEUE, body=json.dumps(message))
+    messages.append(json.dumps(message))
   elif intSrc == 3:
     print('Noise level too high!')
     message = {
       "message": 'Noise level too high!',
       "datetime": datetime.now().strftime("%Y-%m-%dT%H:%M:%S.%f")
     }
-    lightningChannel.basic_publish(exchange='', routing_key=LIGHTNING_QUEUE, body=json.dumps(message))
+    messages.append(json.dumps(message))
   else:
     pass
 #Set to input mode
@@ -139,6 +141,9 @@ while True:
     "datetime": datetime.now().strftime("%Y-%m-%dT%H:%M:%S.%f")
   }
   temperaturePressureChannel.basic_publish(exchange='', routing_key=TEMP_PRESS_QUEUE, body=json.dumps(message))
+  while (messages.count > 0):
+    msg = messages.pop(0)
+    lightningChannel.basic_publish(exchange='', routing_key=LIGHTNING_QUEUE, body=json.dumps(msg))
   time.sleep(1.0)
 
 

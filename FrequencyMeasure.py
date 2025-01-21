@@ -23,8 +23,7 @@ AS3935_I2C_ADDR2 = 0X02
 AS3935_I2C_ADDR3 = 0X03
 
 #Antenna tuning capcitance (must be integer multiple of 8, 8 - 120 pf)
-AS3935_CAPACITANCE = 8
-IRQ_PIN = 10
+AS3935_CAPACITANCE = 0
 
 GPIO.setmode(GPIO.BOARD)
 
@@ -173,7 +172,7 @@ if __name__ == "__main__":
    import time
    import pigpio
 
-   PWM_GPIO = 10
+   PWM_GPIO = 20
    RUN_TIME = 60.0
    SAMPLE_TIME = 2.0
 
@@ -184,6 +183,8 @@ if __name__ == "__main__":
    start = time.time()
 
    while (time.time() - start) < RUN_TIME:
+
+      time.sleep(SAMPLE_TIME)
 
       f = p.frequency()
       pw = p.pulse_width()
