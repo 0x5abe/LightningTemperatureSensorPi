@@ -185,8 +185,6 @@ if __name__ == "__main__":
 
    while (time.time() - start) < RUN_TIME:
 
-      time.sleep(SAMPLE_TIME)
-
       f = p.frequency()
       pw = p.pulse_width()
       dc = p.duty_cycle()
