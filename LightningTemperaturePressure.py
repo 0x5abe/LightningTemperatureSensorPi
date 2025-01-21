@@ -141,7 +141,7 @@ while True:
     "datetime": datetime.now().strftime("%Y-%m-%dT%H:%M:%S.%f")
   }
   temperaturePressureChannel.basic_publish(exchange='', routing_key=TEMP_PRESS_QUEUE, body=json.dumps(message))
-  while (messages.count > 0):
+  while len(messages) > 0:
     msg = messages.pop(0)
     lightningChannel.basic_publish(exchange='', routing_key=LIGHTNING_QUEUE, body=json.dumps(msg))
   time.sleep(1.0)
