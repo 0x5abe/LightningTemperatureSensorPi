@@ -33,8 +33,8 @@ else:
 lightningSensor.power_up()
 
 #set indoors or outdoors models
-#lightningSensor.set_indoors()
-lightningSensor.set_outdoors()
+lightningSensor.set_indoors()
+#lightningSensor.set_outdoors()
 
 #disturber detection
 lightningSensor.disturber_en()
